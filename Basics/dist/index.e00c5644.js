@@ -142,14 +142,14 @@
       this[globalName] = mainExports;
     }
   }
-})({"fZhb5":[function(require,module,exports) {
+})({"4McfI":[function(require,module,exports) {
 var global = arguments[3];
 var HMR_HOST = null;
 var HMR_PORT = null;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d6ea1d42532a7575";
 var HMR_USE_SSE = false;
-module.bundle.HMR_BUNDLE_ID = "aabdeea951bbeb83";
+module.bundle.HMR_BUNDLE_ID = "1b54f3d3e00c5644";
 "use strict";
 /* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, HMR_USE_SSE, chrome, browser, __parcel__import__, __parcel__importScripts__, ServiceWorkerGlobalScope */ /*::
 import type {
@@ -583,8 +583,9 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
     });
 }
 
-},{}],"k7v23":[function(require,module,exports) {
+},{}],"aRM59":[function(require,module,exports) {
 var _redux = require("redux");
+var _myRedux = require("./my-redux");
 let initialState = {
     name: "Majeed",
     post: 1,
@@ -593,19 +594,6 @@ let initialState = {
     city: "Karachi"
 };
 function reducer(state = initialState, action) {
-    // if(action.type === 'increment'){
-    //     return {...state, post: state.post + 1}
-    // }
-    // else if(action.type === 'decrement'){
-    //     return {...state, post: state.post -1}
-    // }
-    // else if(action.type === 'increaseBy'){
-    //     return {...state, post: state.post + action.payload}
-    // }
-    // else if(action.type === 'decreaseBy'){
-    //     return {...state, post: state.post - action.payload}
-    // }
-    // return state
     switch(action.type){
         case "increment":
             return {
@@ -632,30 +620,33 @@ function reducer(state = initialState, action) {
     }
 }
 const store = (0, _redux.createStore)(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// working with my my-redux
+const myStore = (0, _myRedux.myCreateStore)(reducer);
+console.log("my store", myStore);
 console.log(store);
 console.log("store", store.getState());
 // we dont' need to console log after every dispatch to see the changes in the state 
 // instead we can use subscribe method which will automatically run when the state changes
-store.subscribe(()=>{
-    console.log(store.getState());
+myStore.subscribe(()=>{
+    console.log(myStore.getState());
 });
 // These are called action dispatching dispatching
-store.dispatch({
+myStore.dispatch({
     type: "increment"
 });
-store.dispatch({
+myStore.dispatch({
     type: "decrement"
 });
-store.dispatch({
+myStore.dispatch({
     type: "increaseBy",
     payload: 10
 });
-store.dispatch({
+myStore.dispatch({
     type: "decreaseBy",
-    payload: 10
+    payload: 5
 });
 
-},{"redux":"anWnS"}],"anWnS":[function(require,module,exports) {
+},{"redux":"anWnS","./my-redux":"hh9Yn"}],"anWnS":[function(require,module,exports) {
 // src/utils/formatProdErrorMessage.ts
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -993,6 +984,31 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["fZhb5","k7v23"], "k7v23", "parcelRequiree811")
+},{}],"hh9Yn":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "myCreateStore", ()=>myCreateStore);
+function myCreateStore(reducer) {
+    let state;
+    const listners = [];
+    const store = {
+        getState () {
+            return state;
+        },
+        dispatch (action) {
+            state = reducer(state, action);
+            listners.forEach((listner)=>{
+                listner();
+            });
+        },
+        subscribe (listner) {
+            listners.push(listner);
+        }
+    };
+    // store.dispatch({type: "init"})
+    return store;
+}
 
-//# sourceMappingURL=index.51bbeb83.js.map
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"f9rvg"}]},["4McfI","aRM59"], "aRM59", "parcelRequiree811")
+
+//# sourceMappingURL=index.e00c5644.js.map
