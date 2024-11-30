@@ -592,105 +592,48 @@ var _wishlistReducer = require("./WishlistReducer");
 var _wishlistReducerDefault = parcelHelpers.interopDefault(_wishlistReducer);
 var _productReducer = require("./ProductReducer");
 var _productReducerDefault = parcelHelpers.interopDefault(_productReducer);
+var _action = require("./Action");
 const reducer = (0, _redux.combineReducers)({
     products: (0, _productReducerDefault.default),
     cartItems: (0, _cartReducerDefault.default),
     wishList: (0, _wishlistReducerDefault.default)
 });
 const store = (0, _redux.createStore)(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-store.dispatch({
-    type: "addToCart",
-    payload: {
-        productId: 2,
-        quantity: 4
-    }
-});
-store.dispatch({
-    type: "addToCart",
-    payload: {
-        productId: 28,
-        quantity: 2
-    }
-});
-store.dispatch({
-    type: "addToCart",
-    payload: {
-        productId: 12,
-        quantity: 3
-    }
-});
-store.dispatch({
-    type: "addToCart",
-    payload: {
-        productId: 6,
-        quantity: 6
-    }
-});
-store.dispatch({
-    type: "removeFromCart",
-    payload: {
-        productId: 12
-    }
-});
-store.dispatch({
-    type: "addQuantity",
-    payload: {
-        productId: 2
-    }
-});
-store.dispatch({
-    type: "addQuantity",
-    payload: {
-        productId: 6
-    }
-});
-store.dispatch({
-    type: "decreaseQuantity",
-    payload: {
-        productId: 28
-    }
-});
-store.dispatch({
-    type: "addToWishList",
-    payload: {
-        productId: 28
-    }
-});
-store.dispatch({
-    type: "addToWishList",
-    payload: {
-        productId: 2
-    }
-});
-store.dispatch({
-    type: "addToWishList",
-    payload: {
-        productId: 15
-    }
-});
-store.dispatch({
-    type: "addToWishList",
-    payload: {
-        productId: 12
-    }
-});
-store.dispatch({
-    type: "addToWishList",
-    payload: {
-        productId: 10
-    }
-});
-store.dispatch({
-    type: "removeFromWishList",
-    payload: {
-        productId: 2
-    }
-});
+// store.dispatch({ type: "addToCart", payload: { productId: 2, quantity: 4 } });
+// store.dispatch({ type: "addToCart", payload: { productId: 28, quantity: 2 } });
+// store.dispatch({ type: "addToCart", payload: { productId: 12, quantity: 3 } });
+// store.dispatch({ type: "addToCart", payload: { productId: 6, quantity: 6 } });
+// store.dispatch({ type: "removeFromCart", payload: { productId: 12 } });
+// store.dispatch({ type: "addQuantity", payload: { productId: 2 } });
+// store.dispatch({ type: "addQuantity", payload: { productId: 6 } });
+// store.dispatch({ type: "decreaseQuantity", payload: { productId: 28 } });
+// store.dispatch({ type: "addToWishList", payload: { productId: 28 } });
+// store.dispatch({ type: "addToWishList", payload: { productId: 2 } });
+// store.dispatch({ type: "addToWishList", payload: { productId: 15 } });
+// store.dispatch({ type: "addToWishList", payload: { productId: 12 } });
+// store.dispatch({ type: "addToWishList", payload: { productId: 10 } });
+// store.dispatch({ type: "removeFromWishList", payload: { productId: 2 } });
 // store.dispatch({ type: "decreaseQuantity", payload: { productId: 28 } });
 // store.dispatch({ type: "decreaseQuantity", payload: { productId: 28 } });
 console.log(store.getState());
+// Using Action creaters
+store.dispatch((0, _action.addToCart)(2, 4));
+store.dispatch((0, _action.addToCart)(28, 2));
+store.dispatch((0, _action.addToCart)(12, 3));
+store.dispatch((0, _action.addToCart)(6, 6));
+store.dispatch((0, _action.removeFromCart)(12));
+store.dispatch((0, _action.increaseQuantity)(2));
+store.dispatch((0, _action.increaseQuantity)(6));
+store.dispatch((0, _action.decreaseQuantity)(28));
+store.dispatch((0, _action.decreaseQuantity)(28));
+store.dispatch((0, _action.addToWishlist)(28));
+store.dispatch((0, _action.addToWishlist)(2));
+store.dispatch((0, _action.addToWishlist)(15));
+store.dispatch((0, _action.addToWishlist)(12));
+store.dispatch((0, _action.addToWishlist)(10));
+store.dispatch((0, _action.removeFromWishlist)(2));
 
-},{"redux":"anWnS","./CartReducer":"8J9jC","./WishlistReducer":"aFgIo","./ProductReducer":"6O1sU","@parcel/transformer-js/src/esmodule-helpers.js":"f9rvg"}],"anWnS":[function(require,module,exports) {
+},{"redux":"anWnS","./CartReducer":"8J9jC","./WishlistReducer":"aFgIo","./ProductReducer":"6O1sU","@parcel/transformer-js/src/esmodule-helpers.js":"f9rvg","./Action":"85Vsb"}],"anWnS":[function(require,module,exports) {
 // src/utils/formatProdErrorMessage.ts
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -1335,6 +1278,65 @@ const productList = [
         }
     }
 ];
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"f9rvg"}],"85Vsb":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addToCart", ()=>addToCart);
+parcelHelpers.export(exports, "removeFromCart", ()=>removeFromCart);
+parcelHelpers.export(exports, "increaseQuantity", ()=>increaseQuantity);
+parcelHelpers.export(exports, "decreaseQuantity", ()=>decreaseQuantity);
+parcelHelpers.export(exports, "addToWishlist", ()=>addToWishlist);
+parcelHelpers.export(exports, "removeFromWishlist", ()=>removeFromWishlist);
+function addToCart(productId, quantity) {
+    return {
+        type: "addToCart",
+        payload: {
+            productId: productId,
+            quantity: quantity
+        }
+    };
+}
+function removeFromCart(productId) {
+    return {
+        type: "removeFromCart",
+        payload: {
+            productId: productId
+        }
+    };
+}
+function increaseQuantity(productId) {
+    return {
+        type: "addQuantity",
+        payload: {
+            productId: productId
+        }
+    };
+}
+function decreaseQuantity(productId) {
+    return {
+        type: "decreaseQuantity",
+        payload: {
+            productId: productId
+        }
+    };
+}
+function addToWishlist(productId) {
+    return {
+        type: "addToWishList",
+        payload: {
+            productId: productId
+        }
+    };
+}
+function removeFromWishlist(productId) {
+    return {
+        type: "removeFromWishList",
+        payload: {
+            productId: productId
+        }
+    };
+}
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"f9rvg"}]},["cH7W3","f9qsF"], "f9qsF", "parcelRequiree811")
 
