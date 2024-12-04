@@ -1,7 +1,16 @@
 export default function CartReducer(state = [], action) {
   switch (action.type) {
     case "addToCart":
-      return [...state, action.payload];
+      const existingItem = state.find((cartItem)=> cartItem.productId === action.payload.productId)
+      if(existingItem){
+        return state.map((cartItem)=>{
+          if(cartItem.productId === existingItem.productId){
+            return {...cartItem, quantity: cartItem.quantity + 1}
+          }
+          return cartItem
+        })
+      }
+      return [...state, {...action.payload, quantity: 1}];
 
     case "removeFromCart":
       return state.filter((cartItem) => cartItem.productId !== action.payload.productId)

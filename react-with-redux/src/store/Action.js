@@ -1,10 +1,7 @@
-export function addToCart(productId, quantity) {
+export function addToCart(productData) {
   return {
     type: "addToCart",
-    payload: {
-      productId: productId,
-      quantity: quantity,
-    },
+    payload: productData,
   };
 }
 
@@ -35,12 +32,10 @@ export function decreaseQuantity(productId) {
   };
 }
 
-export function addToWishlist(productId) {
+export function addToWishlist(productData) {
     return {
       type: "addToWishList",
-      payload: {
-        productId: productId
-      },
+      payload: productData,
     };
   }
   
