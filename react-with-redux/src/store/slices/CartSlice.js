@@ -1,43 +1,79 @@
-export default function CartReducer(state = [], action) {
-  switch (action.type) {
-    case "addToCart":
-      const existingItem = state.find(
-        (cartItem) => cartItem.productId === action.payload.productId
-      );
-      if (existingItem) {
-        return state.map((cartItem) => {
-          if (cartItem.productId === existingItem.productId) {
-            return { ...cartItem, quantity: cartItem.quantity + 1 };
-          }
-          return cartItem;
-        });
-      }
-      return [...state, { ...action.payload, quantity: 1 }];
+import { produce } from "immer";
 
-    case "removeFromCart":
-      return state.filter(
-        (cartItem) => cartItem.productId !== action.payload.productId
-      );
+export default function CartReducer(orignalState = [], action) {
+  return produce(orignalState, (state) => {
+    const existingItemIndex = state.findIndex(
+      (cartItem) => cartItem.productId === action.payload.productId
+    );
 
-    case "addQuantity":
-      return state.map((cartItem) => {
-        if (cartItem.productId === action.payload.productId) {
-          return { ...cartItem, quantity: cartItem.quantity + 1 };
+    switch (action.type) {
+      case "addToCart":
+        if (existingItemIndex !== -1) {
+          state[existingItemIndex].quantity += 1;
+          break;
         }
-        return cartItem;
-      });
+        state.push({ ...action.payload, quantity: 1 });
+        break;
 
-    case "decreaseQuantity":
-      return state
-        .map((cartItem) => {
-          if (cartItem.productId === action.payload.productId) {
-            return { ...cartItem, quantity: cartItem.quantity - 1 };
-          }
-          return cartItem;
-        })
-        .filter((cartItem) => cartItem.quantity > 0);
+      case "removeFromCart":
+        state.splice(existingItemIndex, 1);
+        break;
 
-    default:
-      return state;
-  }
+      case "addQuantity":
+        state[existingItemIndex].quantity += 1;
+        break;
+
+      case "decreaseQuantity":
+        state[existingItemIndex].quantity -= 1;
+        if (state[existingItemIndex].quantity === 0) {
+          state.splice(existingItemIndex, 1);
+        }
+        break;
+    }
+    return state;
+  });
 }
+//
+// export default function CartReducer(state = [], action) {
+//   switch (action.type) {
+//     case "addToCart":
+//       const existingItem = state.find(
+//         (cartItem) => cartItem.productId === action.payload.productId
+//       );
+//       if (existingItem) {
+//         return state.map((cartItem) => {
+//           if (cartItem.productId === existingItem.productId) {
+//             return { ...cartItem, quantity: cartItem.quantity + 1 };
+//           }
+//           return cartItem;
+//         });
+//       }
+//       return [...state, { ...action.payload, quantity: 1 }];
+
+//     case "removeFromCart":
+//       return state.filter(
+//         (cartItem) => cartItem.productId !== action.payload.productId
+//       );
+
+//     case "addQuantity":
+//       return state.map((cartItem) => {
+//         if (cartItem.productId === action.payload.productId) {
+//           return { ...cartItem, quantity: cartItem.quantity + 1 };
+//         }
+//         return cartItem;
+//       });
+
+//     case "decreaseQuantity":
+//       return state
+//         .map((cartItem) => {
+//           if (cartItem.productId === action.payload.productId) {
+//             return { ...cartItem, quantity: cartItem.quantity - 1 };
+//           }
+//           return cartItem;
+//         })
+//         .filter((cartItem) => cartItem.quantity > 0);
+
+//     default:
+//       return state;
+//   }
+// }
