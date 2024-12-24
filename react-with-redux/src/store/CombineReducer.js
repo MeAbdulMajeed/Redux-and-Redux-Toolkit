@@ -1,18 +1,21 @@
 import { combineReducers, createStore } from "redux";
-import CartReducer from "./slices/CartSlice";
+import Cart from "./slices/CartSlice";
 import WishlistReducer from "./slices/WishlistSlice";
 import ProductReducer from "./slices/ProductSlice";
 import { produce } from "immer";
+import { configureStore } from "@reduxjs/toolkit";
 const reducer = combineReducers({
   products: ProductReducer,
-  cartItems: CartReducer,
+  cartItems: Cart,
   wishList: WishlistReducer,
 });
 
-export const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+export const store = configureStore({reducer})
+
+// export const store = createStore(
+//   reducer,
+//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+// );
 
 // const users = [
 //   {

@@ -1,39 +1,83 @@
-import { produce } from "immer";
+import { createSlice } from "@reduxjs/toolkit";
+// import { produce } from "immer";
+// export default function CartReducer(orignalState = [], action) {
+//   return produce(orignalState, (state) => {
+//     const existingItemIndex = state.findIndex(
+//       (cartItem) => cartItem.productId === action.payload.productId
+//     );
 
-export default function CartReducer(orignalState = [], action) {
-  return produce(orignalState, (state) => {
-    const existingItemIndex = state.findIndex(
-      (cartItem) => cartItem.productId === action.payload.productId
-    );
+//     switch (action.type) {
+//       case "addToCart":
+//         if (existingItemIndex !== -1) {
+//           state[existingItemIndex].quantity += 1;
+//           break;
+//         }
+//         state.push({ ...action.payload, quantity: 1 });
+//         break;
 
-    switch (action.type) {
-      case "addToCart":
-        if (existingItemIndex !== -1) {
-          state[existingItemIndex].quantity += 1;
-          break;
-        }
-        state.push({ ...action.payload, quantity: 1 });
-        break;
+//       case "removeFromCart":
+//         state.splice(existingItemIndex, 1);
+//         break;
 
-      case "removeFromCart":
-        state.splice(existingItemIndex, 1);
-        break;
+//       case "addQuantity":
+//         state[existingItemIndex].quantity += 1;
+//         break;
 
-      case "addQuantity":
+//       case "decreaseQuantity":
+//         state[existingItemIndex].quantity -= 1;
+//         if (state[existingItemIndex].quantity === 0) {
+//           state.splice(existingItemIndex, 1);
+//         }
+//         break;
+//     }
+//     return state;
+//   });
+// }
+// action Types
+
+// Toolkit
+const findItemIndex = (state, action) =>
+  state.findIndex(
+    (cartItem) => cartItem.productId === action.payload.productId
+  );
+
+const slice = createSlice({
+  name: "cart",
+  initialState: [],
+  reducers: {
+    addToCart(state, action) {
+      const existingItemIndex = findItemIndex(state, action);
+      console.log("existing item index", existingItemIndex)
+      if (existingItemIndex !== -1) {
         state[existingItemIndex].quantity += 1;
-        break;
+      } else {
+        state.push({ ...action.payload, quantity: 1 });
+      }
+    },
 
-      case "decreaseQuantity":
-        state[existingItemIndex].quantity -= 1;
-        if (state[existingItemIndex].quantity === 0) {
-          state.splice(existingItemIndex, 1);
-        }
-        break;
-    }
-    return state;
-  });
-}
-//
+    removeFromCart(state, action) {
+      const existingItemIndex = findItemIndex(state, action);
+      state.splice(existingItemIndex, 1);
+    },
+
+    increaseQuantity(state, action) {
+      const existingItemIndex = findItemIndex(state, action);
+      state[existingItemIndex].quantity += 1;
+    },
+
+    decreaseQuantity(state, action) {
+      const existingItemIndex = findItemIndex(state, action);
+      state[existingItemIndex].quantity -= 1;
+      if (state[existingItemIndex].quantity === 0) {
+        state.splice(existingItemIndex, 1);
+      }
+    },
+  },
+});
+
+export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } =
+  slice.actions;
+export default slice.reducer;
 // export default function CartReducer(state = [], action) {
 //   switch (action.type) {
 //     case "addToCart":
