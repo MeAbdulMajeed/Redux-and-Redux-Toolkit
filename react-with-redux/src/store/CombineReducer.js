@@ -4,13 +4,19 @@ import WishlistReducer from "./slices/WishlistSlice";
 import ProductReducer from "./slices/ProductSlice";
 import { produce } from "immer";
 import { configureStore } from "@reduxjs/toolkit";
-const reducer = combineReducers({
-  products: ProductReducer,
-  cartItems: Cart,
-  wishList: WishlistReducer,
-});
+// const reducer = combineReducers({
+//   products: ProductReducer,
+//   cartItems: Cart,
+//   wishList: WishlistReducer,
+// });
 
-export const store = configureStore({reducer})
+export const store = configureStore({
+  reducer: {
+    products: ProductReducer,
+    cartItems: Cart,
+    wishList: WishlistReducer,
+  }
+})
 
 // export const store = createStore(
 //   reducer,
