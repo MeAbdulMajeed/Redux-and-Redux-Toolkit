@@ -10,12 +10,31 @@ import { configureStore } from "@reduxjs/toolkit";
 //   wishList: WishlistReducer,
 // });
 
+// function logger(store){
+//   return function(next){
+//     return function(action){
+//       console.log("store",store)
+//       console.log("next",next)
+//       console.log("next",action)
+//       next(action) // without this action will not dispatch because by default middleware stops action dispatching
+//     }
+//   }
+// }
+// using arrow function
+
+const logger = (store)=> (next)=> (action)=>{
+  console.log("store",store)
+  return next(action)
+} 
 export const store = configureStore({
   reducer: {
     products: ProductReducer,
     cartItems: Cart,
     wishList: WishlistReducer,
-  }
+  },
+  middleware: (getDefaultMiddleware)=>
+    getDefaultMiddleware().concat(logger)
+  
 })
 
 // export const store = createStore(
