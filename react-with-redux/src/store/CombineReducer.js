@@ -1,7 +1,7 @@
 import { combineReducers, createStore } from "redux";
 import Cart from "./slices/CartSlice";
 import WishlistReducer from "./slices/WishlistSlice";
-import ProductReducer from "./slices/ProductSlice";
+import ProductSlice from "./slices/ProductSlice"
 import { produce } from "immer";
 import { configureStore } from "@reduxjs/toolkit";
 // const reducer = combineReducers({
@@ -28,7 +28,7 @@ const logger = (store)=> (next)=> (action)=>{
 } 
 export const store = configureStore({
   reducer: {
-    products: ProductReducer,
+    products: ProductSlice,
     cartItems: Cart,
     wishList: WishlistReducer,
   },
