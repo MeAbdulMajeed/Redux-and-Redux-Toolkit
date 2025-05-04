@@ -1,6 +1,7 @@
 import React from "react";
 import CartItem from "../Components/CartItem";
 import { useSelector } from "react-redux";
+import { selectCartError, selectCartItems, selectCartLoading, selectMemoizedCartItems } from "../store/slices/CartSlice";
 export default function Cart() {
   // const cartItems = [
   //   {
@@ -29,19 +30,9 @@ export default function Cart() {
   //   },
   // ]
 
-  const cartItems = useSelector((state) => {
-    return state?.cartItems?.list
-      .map((cartItem) => {
-        const cartProduct = state.products.list.find(
-          (product) => product.id === cartItem.productId
-        );
-        // console.log("cartProduct", cartProduct)
-        return { ...cartProduct, quantity: cartItem.quantity };
-      })
-      .filter(({ title }) => title);
-  });
-  const isLoading = useSelector((state) => state.cartItems.loading);
-  const isError = useSelector((state) => state.cartItems.error);
+  const cartItems = useSelector(selectMemoizedCartItems);
+  const isLoading = useSelector(selectCartLoading);
+  const isError = useSelector(selectCartError);
   return isLoading ? (
     <h1 style={{ textAlign: "center" }}>Loading...</h1>
   ) : isError ? (

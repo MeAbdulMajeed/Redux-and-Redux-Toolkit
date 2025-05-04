@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { startTransition } from "react";
 // import { produce } from "immer";
 // export default function CartReducer(orignalState = [], action) {
 //   return produce(orignalState, (state) => {
@@ -52,7 +53,7 @@ const slice = createSlice({
     fetchCartItems: (state) => {
       state.loading = true;
     },
-    fetchCartError: (state, action)=>{
+    fetchCartError: (state, action) => {
       state.loading = false;
       state.error = action.payload || "Something went wrong";
     },
@@ -91,6 +92,25 @@ const slice = createSlice({
   },
 });
 
+const selectCartItems = (state) => {
+  return state?.cartItems?.list
+    .map((cartItem) => {
+      const cartProduct = state.products.list.find(
+        (product) => product.id === cartItem.productId
+      );
+      // console.log("cartProduct", cartProduct)
+      return { ...cartProduct, quantity: cartItem.quantity };
+    })
+    .filter(({ title }) => title);
+};
+
+export const selectMemoizedCartItems = createSelector(
+  selectCartItems,
+  (state) => state
+);
+export const selectCartLoading = (state) => state.cartItems.loading;
+export const selectCartError = (state) => state.cartItems.error;
+
 export const {
   addToCart,
   removeFromCart,
@@ -98,7 +118,7 @@ export const {
   decreaseQuantity,
   loadCartItems,
   fetchCartError,
-  fetchCartItems
+  fetchCartItems,
 } = slice.actions;
 export default slice.reducer;
 // export default function CartReducer(state = [], action) {
