@@ -43,40 +43,63 @@ const findItemIndex = (state, action) =>
 
 const slice = createSlice({
   name: "cart",
-  initialState: [],
+  initialState: {
+    loading: false,
+    list: [],
+    error: "",
+  },
   reducers: {
+    fetchCartItems: (state) => {
+      state.loading = true;
+    },
+    fetchCartError: (state, action)=>{
+      state.loading = false;
+      state.error = action.payload || "Something went wrong";
+    },
+    loadCartItems: (state, action) => {
+      state.loading = false;
+      state.list = action.payload;
+      state.error = "";
+    },
     addToCart(state, action) {
-      const existingItemIndex = findItemIndex(state, action);
-      console.log("existing item index", existingItemIndex)
+      const existingItemIndex = findItemIndex(state.list, action);
+      console.log("existing item index", existingItemIndex);
       if (existingItemIndex !== -1) {
-        state[existingItemIndex].quantity += 1;
+        state.list[existingItemIndex].quantity += 1;
       } else {
-        state.push({ ...action.payload, quantity: 1 });
+        state.list.push({ ...action.payload, quantity: 1 });
       }
     },
 
     removeFromCart(state, action) {
-      const existingItemIndex = findItemIndex(state, action);
-      state.splice(existingItemIndex, 1);
+      const existingItemIndex = findItemIndex(state.list, action);
+      state.list.splice(existingItemIndex, 1);
     },
 
     increaseQuantity(state, action) {
-      const existingItemIndex = findItemIndex(state, action);
-      state[existingItemIndex].quantity += 1;
+      const existingItemIndex = findItemIndex(state.list, action);
+      state.list[existingItemIndex].quantity += 1;
     },
 
     decreaseQuantity(state, action) {
-      const existingItemIndex = findItemIndex(state, action);
-      state[existingItemIndex].quantity -= 1;
-      if (state[existingItemIndex].quantity === 0) {
-        state.splice(existingItemIndex, 1);
+      const existingItemIndex = findItemIndex(state.list, action);
+      state.list[existingItemIndex].quantity -= 1;
+      if (state.list[existingItemIndex].quantity === 0) {
+        state.list.splice(existingItemIndex, 1);
       }
     },
   },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } =
-  slice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
+  loadCartItems,
+  fetchCartError,
+  fetchCartItems
+} = slice.actions;
 export default slice.reducer;
 // export default function CartReducer(state = [], action) {
 //   switch (action.type) {

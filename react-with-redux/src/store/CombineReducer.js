@@ -1,7 +1,7 @@
 import { combineReducers, createStore } from "redux";
 import Cart from "./slices/CartSlice";
 import WishlistReducer from "./slices/WishlistSlice";
-import ProductSlice from "./slices/ProductSlice"
+import ProductSlice from "./slices/ProductSlice";
 import { produce } from "immer";
 import { configureStore } from "@reduxjs/toolkit";
 // const reducer = combineReducers({
@@ -22,20 +22,18 @@ import { configureStore } from "@reduxjs/toolkit";
 // }
 // using arrow function
 
-const logger = (store)=> (next)=> (action)=>{
-  console.log("store",store)
-  return next(action)
-} 
+const logger = (store) => (next) => (action) => {
+  console.log("store", store);
+  return next(action);
+};
 export const store = configureStore({
   reducer: {
     products: ProductSlice,
     cartItems: Cart,
     wishList: WishlistReducer,
   },
-  middleware: (getDefaultMiddleware)=>
-    getDefaultMiddleware().concat(logger)
-  
-})
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger), 
+});
 
 // export const store = createStore(
 //   reducer,
@@ -59,7 +57,6 @@ export const store = configureStore({
 //     age: 15,
 //   },
 // ];
-
 
 // directly mutating
 // users[1].age = 28

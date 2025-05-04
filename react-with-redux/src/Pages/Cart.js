@@ -29,9 +29,24 @@ export default function Cart() {
   //   },
   // ]
 
-  const cartItems = useSelector((state) => state.cartItems);
-  console.log(cartItems);
-  return (
+  const cartItems = useSelector((state) => {
+    return state?.cartItems?.list
+      .map((cartItem) => {
+        const cartProduct = state.products.list.find(
+          (product) => product.id === cartItem.productId
+        );
+        // console.log("cartProduct", cartProduct)
+        return { ...cartProduct, quantity: cartItem.quantity };
+      })
+      .filter(({ title }) => title);
+  });
+  const isLoading = useSelector((state) => state.cartItems.loading);
+  const isError = useSelector((state) => state.cartItems.error);
+  return isLoading ? (
+    <h1 style={{ textAlign: "center" }}>Loading...</h1>
+  ) : isError ? (
+    <h2 style={{ textAlign: "center", color: "red" }}>{isError}</h2>
+  ) : (
     <div className="cart-container">
       <h2>Items in Your Cart</h2>
       <div className="cart-items-container">
@@ -41,26 +56,24 @@ export default function Cart() {
           <div className="quantity">Quantity</div>
           <div className="total">Total</div>
         </div>
-        {cartItems.map(
-          ({ productId, title, rating, price, imageUrl, quantity }) => (
-            <CartItem
-              key={productId}
-              productId={productId}
-              title={title}
-              price={price}
-              quantity={quantity}
-              imageUrl={imageUrl}
-              rating={rating}
-            />
-          )
-        )}
+        {cartItems.map(({ id, title, rating, price, image, quantity }) => (
+          <CartItem
+            key={id}
+            productId={id}
+            title={title}
+            price={price}
+            quantity={quantity}
+            imageUrl={image}
+            rating={rating.rate}
+          />
+        ))}
         <div className="cart-header cart-item-container">
           <div></div>
           <div></div>
           <div></div>
           <div className="total">
             $
-            {cartItems.reduce(
+            {!isLoading && cartItems.reduce(
               (acc, current) => acc + current.price * current.quantity,
               0
             )}
