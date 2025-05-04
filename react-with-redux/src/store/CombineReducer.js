@@ -4,6 +4,7 @@ import WishlistReducer from "./slices/WishlistSlice";
 import ProductSlice from "./slices/ProductSlice";
 import { produce } from "immer";
 import { configureStore } from "@reduxjs/toolkit";
+import { apiMiddleware } from "./middleware/api";
 // const reducer = combineReducers({
 //   products: ProductReducer,
 //   cartItems: Cart,
@@ -22,17 +23,13 @@ import { configureStore } from "@reduxjs/toolkit";
 // }
 // using arrow function
 
-const logger = (store) => (next) => (action) => {
-  console.log("store", store);
-  return next(action);
-};
 export const store = configureStore({
   reducer: {
     products: ProductSlice,
     cartItems: Cart,
     wishList: WishlistReducer,
   },
-  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger), 
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiMiddleware), 
 });
 
 // export const store = createStore(

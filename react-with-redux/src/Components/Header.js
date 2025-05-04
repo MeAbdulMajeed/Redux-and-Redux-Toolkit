@@ -9,9 +9,10 @@ import {
 } from "../store/slices/ProductSlice";
 import {
   fetchCartError,
-  fetchCartItems,
+  fetchCartItems, 
   loadCartItems,
 } from "../store/slices/CartSlice";
+import { fetchData } from "../store/middleware/api";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -21,34 +22,51 @@ export default function Header() {
   const url = "https://fakestoreapi.com/products";
 
   useEffect(() => {
-    const fetchProductsApi = async () => {
-      try {
-        dispatch(fetchProducts());
-        const response = await fetch(url);
-        const data = await response.json();
-        // console.log("store data", data);
-        dispatch(updateAllProducts(data));
-      } catch (error) {
-        dispatch(fetchProductsError());
-        // console.log("Error fetching products:", error);
-      }
-    };
-    const fetchCartItemsApi = async () => {
-      try {
-        dispatch(fetchCartItems());
-        const response = await fetch("https://fakestoreapi.com/carts/5");
-        const data = await response.json();
-        console.log("cart data", data.products);
-        dispatch(loadCartItems(data.products));
-      } catch (error) {
-        dispatch(fetchCartError());
-        console.log("Error fetching cart data:", error);
-      }
-    };
-    fetchProductsApi();
-    fetchCartItemsApi();
+    dispatch(
+      fetchData({
+        url: "products",
+        onStart: fetchProducts.type,
+        onSuccess: updateAllProducts.type,
+        onError: fetchProductsError.type,
+      })
+    );
+    dispatch(
+      fetchData({
+        url: "carts/5",
+        onStart: fetchCartItems.type,
+        onSuccess: loadCartItems.type,
+        onError: fetchCartError.type,
+        transformRespone: (data) => data.products,
+      })
+    );
+    // const fetchProductsApi = async () => {
+    //   try {
+    //     dispatch(fetchProducts());
+    //     const response = await fetch(url);
+    //     const data = await response.json();
+    //     // console.log("store data", data);
+    //     dispatch(updateAllProducts(data));
+    //   } catch (error) {
+    //     dispatch(fetchProductsError());
+    //     // console.log("Error fetching products:", error);
+    //   }
+    // };
+    // const fetchCartItemsApi = async () => {
+    //   try {
+    //     dispatch(fetchCartItems());
+    //     const response = await fetch("https://fakestoreapi.com/carts/5");
+    //     const data = await response.json();
+    //     // console.log("cart data", data.products);
+    //     dispatch(loadCartItems(data.products));
+    //   } catch (error) {
+    //     dispatch(fetchCartError());
+    //     console.log("Error fetching cart data:", error);
+    //   }
+    // };
+    // fetchProductsApi();
+    // fetchCartItemsApi();
   }, []);
-  console.log(wishlistItems);
+  // console.log(wishlistItems);
   return (
     <header>
       <div className="header-contents">
@@ -63,10 +81,7 @@ export default function Header() {
         <Link className="cart-icon" to="/cart">
           <img src={CartIcon} alt="cart-icon" />
           <div className="cart-items-count">
-            {cartItems.list.reduce(
-              (acc, current) => acc + current.quantity,
-              0
-            )}
+            {cartItems.list.reduce((acc, current) => acc + current.quantity, 0)}
           </div>
         </Link>
       </div>
