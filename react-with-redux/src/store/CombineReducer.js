@@ -5,6 +5,7 @@ import ProductSlice from "./slices/ProductSlice";
 import { produce } from "immer";
 import { configureStore } from "@reduxjs/toolkit";
 import { apiMiddleware } from "./middleware/api";
+import { func } from "./middleware/func";
 // const reducer = combineReducers({
 //   products: ProductReducer,
 //   cartItems: Cart,
@@ -29,7 +30,9 @@ export const store = configureStore({
     cartItems: Cart,
     wishList: WishlistReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiMiddleware), 
+  // Both ways are correct
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiMiddleware, func), 
+  middleware: (getDefaultMiddleware)=> [...getDefaultMiddleware(), apiMiddleware, func], 
 });
 
 // export const store = createStore(

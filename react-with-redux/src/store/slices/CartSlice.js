@@ -111,6 +111,18 @@ export const selectMemoizedCartItems = createSelector(
 export const selectCartLoading = (state) => state.cartItems.loading;
 export const selectCartError = (state) => state.cartItems.error;
 
+export const fetchCartItemsData = () => (dispatch) => {
+  dispatch(fetchCartItems());
+  fetch(`https://fakestoreapi.com/carts/5`)
+    .then((res) => res.json())
+    .then((data) => {
+      dispatch(loadCartItems(data.products));
+    })
+    .catch(() => {
+      dispatch(fetchCartError());
+    });
+};
+
 export const {
   addToCart,
   removeFromCart,

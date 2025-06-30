@@ -4,7 +4,7 @@ export const apiMiddleware =
   (action) => {
     const BASE_URL = "https://fakestoreapi.com";
     if (action.type === "api/makeCall") {
-    //   next(action);
+      // next(action);
       const { url, onSuccess, onStart, onError, transformRespone } =
         action.payload;
       dispatch({ type: onStart });

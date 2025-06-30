@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import CartIcon from "../assets/cart-icon.svg";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchProducts,
-  fetchProductsError,
-  updateAllProducts,
-} from "../store/slices/ProductSlice";
-import {
-  fetchCartError,
-  fetchCartItems, 
-  loadCartItems,
+  fetchCartItemsData
 } from "../store/slices/CartSlice";
-import { fetchData } from "../store/middleware/api";
+import {
+  fetchAllProductsData
+} from "../store/slices/ProductSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -22,23 +17,26 @@ export default function Header() {
   const url = "https://fakestoreapi.com/products";
 
   useEffect(() => {
-    dispatch(
-      fetchData({
-        url: "products",
-        onStart: fetchProducts.type,
-        onSuccess: updateAllProducts.type,
-        onError: fetchProductsError.type,
-      })
-    );
-    dispatch(
-      fetchData({
-        url: "carts/5",
-        onStart: fetchCartItems.type,
-        onSuccess: loadCartItems.type,
-        onError: fetchCartError.type,
-        transformRespone: (data) => data.products,
-      })
-    );
+    // dispatch(
+    //   fetchData({
+    //     url: "products",
+    //     onStart: fetchProducts.type,
+    //     onSuccess: updateAllProducts.type,
+    //     onError: fetchProductsError.type,
+    //   })
+    // );
+    // dispatch(
+    //   fetchData({
+    //     url: "carts/5",
+    //     onStart: fetchCartItems.type,
+    //     onSuccess: loadCartItems.type,
+    //     onError: fetchCartError.type,
+    //     transformRespone: (data) => data.products,
+    //   })
+    // );
+    dispatch(fetchAllProductsData())
+    dispatch(fetchCartItemsData());
+
     // const fetchProductsApi = async () => {
     //   try {
     //     dispatch(fetchProducts());
