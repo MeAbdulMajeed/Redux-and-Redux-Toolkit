@@ -1,4 +1,10 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  isFulfilled,
+  isRejected,
+} from "@reduxjs/toolkit";
 import { startTransition } from "react";
 // import { produce } from "immer";
 // export default function CartReducer(orignalState = [], action) {
@@ -42,6 +48,19 @@ const findItemIndex = (state, action) =>
     (cartItem) => cartItem.productId === action.payload.productId
   );
 
+export const fetchCartItemsData = createAsyncThunk(
+  "cart/fetchCartItems",
+  async () => {
+    try {
+      const response = await fetch(`https://fakestoreapi.com/carts/5`);
+      const data = await response.json();
+      return data.products
+
+    } catch (err) {
+      throw err;
+    }
+  }
+);
 const slice = createSlice({
   name: "cart",
   initialState: {
@@ -50,18 +69,18 @@ const slice = createSlice({
     error: "",
   },
   reducers: {
-    fetchCartItems: (state) => {
-      state.loading = true;
-    },
-    fetchCartError: (state, action) => {
-      state.loading = false;
-      state.error = action.payload || "Something went wrong";
-    },
-    loadCartItems: (state, action) => {
-      state.loading = false;
-      state.list = action.payload;
-      state.error = "";
-    },
+    // fetchCartItems: (state) => {
+    //   state.loading = true;
+    // },
+    // fetchCartError: (state, action) => {
+    //   state.loading = false;
+    //   state.error = action.payload || "Something went wrong";
+    // },
+    // loadCartItems: (state, action) => {
+    //   state.loading = false;
+    //   state.list = action.payload;
+    //   state.error = "";
+    // },
     addToCart(state, action) {
       const existingItemIndex = findItemIndex(state.list, action);
       console.log("existing item index", existingItemIndex);
@@ -90,6 +109,19 @@ const slice = createSlice({
       }
     },
   },
+  extraReducers: (builder)=>{
+    builder.addCase(fetchCartItemsData.pending, (state)=>{
+      state.loading = true
+    })
+    builder.addCase(fetchCartItemsData.fulfilled, (state, action)=>{
+      state.loading = false
+      state.list = action.payload
+    })
+    builder.addCase(fetchCartItemsData.rejected,(state, action)=>{
+      state.loading = false
+      state.error = action.error || "Something went wrong"
+    })
+  }
 });
 
 const selectCartItems = (state) => {
@@ -111,17 +143,17 @@ export const selectMemoizedCartItems = createSelector(
 export const selectCartLoading = (state) => state.cartItems.loading;
 export const selectCartError = (state) => state.cartItems.error;
 
-export const fetchCartItemsData = () => (dispatch) => {
-  dispatch(fetchCartItems());
-  fetch(`https://fakestoreapi.com/carts/5`)
-    .then((res) => res.json())
-    .then((data) => {
-      dispatch(loadCartItems(data.products));
-    })
-    .catch(() => {
-      dispatch(fetchCartError());
-    });
-};
+// export const fetchCartItemsData = () => (dispatch) => {
+//   dispatch(fetchCartItems());
+//   fetch(`https://fakestoreapi.com/carts/5`)
+//     .then((res) => res.json())
+//     .then((data) => {
+//       dispatch(loadCartItems(data.products));
+//     })
+//     .catch(() => {
+//       dispatch(fetchCartError());
+//     });
+// };
 
 export const {
   addToCart,
